@@ -1,0 +1,75 @@
+
+extends layout
+
+block content
+	if(!author)
+		h3 Все идеи 
+		hr
+	if(author && author.name)
+		.userinf
+			- var avatar;
+			- if(author.photoMax)
+				- avatar = author.photoMax;
+				img(src=avatar)
+			- else
+				h3#avatarBig #{author.name[0]}
+			h3(style='font-size: 16px;font-weight: bold;margin-top: 20px;margin-bottom: 5px;') #{author.name}
+			br
+			p ID пользователя: #{author.idNum}
+			p Вклад: #{author.score}
+			li#stats
+				|&nbsp;
+				if(author.stats.posts != 0)
+					a(href='/users/id#{author.idNum}') Идеи: #{author.stats.posts}
+				else
+					a Идеи: 0
+				|&nbsp;
+				|&nbsp;
+				if(author.stats.answers != 0)
+					a(href='/users/id' + author.idNum) Комментарии: #{author.stats.answers}
+				else
+					a Комментарии: 0
+			br
+			#moreinf(style='text-align:left;')
+				li 
+					h3 О себе:
+					if(author.about)
+						p(style='opacity: .8;') #{author.about}
+					else
+						p(style='opacity: .8;') Ничего о себе не рассказал
+				li
+					h3 Контакты:
+					if(author.contacts)
+						p(style='opacity: .8;') !{author.contacts}
+					else
+						p(style='opacity: .8;') Не указал
+			br
+			hr
+			h3(style='text-align:left;') Последние идеи пользователя
+			br
+	br
+	if(posts[0])
+		- each post in posts
+			li.article
+				#tags
+					a(href='/tags/' + post.tags[0]) ##{post.tags[0]}
+					|&nbsp;
+					if(post.tags.length > 1)
+						small(style='display:inline-block;') + #{post.tags.length-1} Ещё
+				a(href='/ideas/' + post.num )
+
+					h2 #{post.title}
+				#postInfo
+					small(style='display:inline-block')='1 коментарий'
+					|&nbsp;
+					|&nbsp;
+					small(style='display:inline-block') Добавлена #{post.addtime}
+					|&nbsp;
+					|&nbsp;
+					small(style='display:inline-block') Просмотров: #{post.reviews}
+				br
+				hr
+				br
+		include _paginate
+	else
+		p Тут нет идей

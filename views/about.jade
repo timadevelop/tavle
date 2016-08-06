@@ -1,0 +1,110 @@
+doctype
+head
+	title About Tavle
+	meta(charset='utf-8')
+	meta(name='description' content='Tavle.ru - это сервис идей и советов для гиков. На "Tavle" публикуются и обсуждаются идеи по IT-тематике.')
+	if(post)
+		-var mtags = post.tags.join(', ');
+		meta(name='keywords' content='Tavle, идеи, ИТ, информационные технологии, стартапы, sturtups, tavle, tavle.ru, IT,'+mtags)
+	else
+		meta(name='keywords' content='Tavle, идеи, ИТ, информационные технологии, стартапы, sturtups, tavle, tavle.ru, IT')
+	link(href='/ico/fav.ico' rel="shortcut icon" type="image/x-icon")
+	link(rel='stylesheet' href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css')
+	link(rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+	link(rel='stylesheet' href='/css/about.min.css')
+	script(src='/js/jquery-1.11.2.min.js')
+	script(src='/js/jquery.scrollTo.min.js')
+	script(src='/js/jquery.mb.YTPlayer.min.js')
+body
+	header#top
+		section.big-background
+			a#bgndVideo.player(data-property="{videoURL:'https://www.youtube.com/watch?v=YrddaP6ml1M',containment:'body',autoPlay:true, mute:true, startAt:0, opacity:1}")
+			.pattern
+				.big-background-container
+					h1.big-background-title Tavle
+					.divider
+						h1#colorize Do something new
+						a.big-background-btn(href='/') Перейти на главную
+	.main
+		.block
+			h2 Публикуйте идеи и получайте советы.
+			br
+			h3 Tavle - сервис, который поможет Вам усовершенствовать свою идею и вдохновиться.
+			br
+			h2 Делитесь своими идеями / обсуждайте идеи других / задавайте вопросы
+			//p Используйте "Tavle" так, как Вам удобно
+			h3 О каких идеях идет речь? 
+			p Речь идет о любых идеях из IT сферы. Будь-то идея стартапа / практики или занятия на выходные.
+			br
+			a.big-background-btn-dark.scrollTo(href='#about') Подробнее
+			br
+			br
+			br
+			hr
+			#about
+				p "Tavle" основан в 2015 году. Тут будет приятно провести время как опытным стартаперам, так и начинающим.
+				br
+				h3 Следите за интересующими вас темами
+				p Отредактируйте "Мою ленту", подписываясь на интересные теги.
+				img(src='/images/howsubscribe.png')
+				hr
+				h3 Привлекайте сотрудников
+				p Каждая идея требует разработчиков, сотрудников.
+				p Вы можете привлечь пользователей сотрудничеству прямо в описании идеи. 
+				img(src='/images/coopindescription.jpg')
+				hr
+				h3 Добавляйте стартапы
+				p У нас есть специальный раздел для описания cтартапов
+				p Просто добавьте в описание идеи тег "Стартап" - и Ваше описание стартапа обязательно опубликуется в разделе "Стартапы"
+				img(src='/images/howAddtoStartups.jpg')
+				hr
+				a.big-background-btn-dark.scrollTo(href='/') Перейти на главную
+				br
+				br
+				br
+			style.
+				#about > hr{background:#333;width:70%;}
+				#about > p{font-size:15px;}
+				#about > img{max-width: 70%;}
+			footer
+				ul#menuServices
+					a(href='/about')
+						li О сайте
+					a(href='/feedback')
+						li Обратная связь
+					a(href='/rules')
+						li Правила
+					//a(href='/feedback')
+						li Реклама
+				ul#menuSocial
+					a(href='https://vk.com/public88353681', target='_blank')
+						li.fa.fa-vk
+					a(href='mailto:maintavle@gmail.com', target='_blank')
+						li.fa.fa-envelope
+					a(href='https://twitter.com/tavleRu', target='_blank')
+						li.fa.fa-twitter
+			small Пользуясь нашим сервисом вы соглашаетесь с его правилами
+			br
+			a(href='#top').up.scrollTo Вверх
+	script(type='text/javascript').
+		$(document).on('click','.scrollTo', function(){
+			var el = $(this).attr('href');
+			$.scrollTo(el, 500);
+		});
+		$(function(){
+			var is_mobile = false;
+			if( $('.player').css('display')=='none') {
+				is_mobile = true;   
+			}
+			if (is_mobile == true) {
+				//Conditional script here
+				$('.big-background').addClass('big-background-default-image');
+			}else{
+				$(".player").mb_YTPlayer(); 
+			}
+		});
+	style.
+		.mbYTP_wrapper{
+			 min-height: 40% !important;
+			 z-index: 500 !important;
+		}

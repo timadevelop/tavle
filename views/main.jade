@@ -1,0 +1,27 @@
+extends layout
+
+block content
+	h3 Последние Идеи
+	hr
+	br
+	- each post in posts
+		li.article
+			#tags
+				a(href='/tags/' + post.tags[0]) ##{post.tags[0]}
+				|&nbsp;
+				if(post._source.tags.length > 1)
+					small(style='display:inline-block;') + #{post.tags.length-1} Ещё
+			a(href='/ideas/' + post.num)
+				h2 #{post.title}
+			#postInfo
+				small(style='display:inline-block')='1 коментарий'
+				|&nbsp;
+				|&nbsp;
+				small(style='display:inline-block') Добавлена #{post.addtime}
+				|&nbsp;
+				|&nbsp;
+				small(style='display:inline-block') Просмотров: #{post.reviews}
+			br
+			hr
+			br
+	include _paginate

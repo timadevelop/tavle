@@ -1,0 +1,112 @@
+extends admin
+
+block content
+	h3 Добавление рекламы.
+	hr
+	br
+	.nav-horizontal
+		li.mainSettingsB.cheked Большая
+		li.authSettingsB Маленькая	
+	#mainSettings
+		form(method='post' action='/admin/advert/add/big')
+			fieldset
+				.form-group
+					Label(for='align') Выбери расположение
+					select.form-control#theme(name = 'align' autocomplete='off')
+						option top
+						option bottom
+				.form-group
+					Label(for='title') title
+					input.form-control#mail( name='title' type='text')
+				.form-group
+					Label(for='imglink') Ссылка на картинку
+					input.form-control#mail( name='imglink' type='text')
+				.form-group
+					Label(for='url') Ссылка на ресурс(url куда направит)
+					input.form-control#mail( name='url' type='text')
+				.form-group
+					Label(for='author') Все что знаешь о заказчике 
+					textarea.form-control(rows='3' name='author')
+				.form-group
+					Label(for='dateDelete') До такого-то числа.
+					textarea.form-control(rows='3' name='dateDelete')
+				.form-group
+					button.btn.btn-primary(type='submit' disable) Добавить
+		hr
+	#authSettings
+		form(method='post' action='/admin/advert/add/small')
+			fieldset
+				.form-group
+					Label(for='title') title
+					input.form-control#mail( name='title' type='text')
+				.form-group
+					Label(for='imglink') Ссылка на картинку
+					input.form-control#mail( name='imglink' type='text')
+				.form-group
+					Label(for='url') Ссылка на ресурс(url куда направит)
+					input.form-control#mail( name='url' type='text')
+				.form-group
+					Label(for='author') Все что знаешь о заказчике 
+					textarea.form-control(rows='3' name='author')
+				.form-group
+					Label(for='dateDelete') До такого-то числа.
+					textarea.form-control(rows='3' name='dateDelete')
+				.form-group
+					button.btn.btn-primary(type='submit' disable) Добавить
+	hr
+	h3 Уже есть
+	hr
+	.col
+		.well
+			h3.text-primary Реклама(большая)
+				if(siteAdvert.big.top && siteAdvert.big.top.length > 0)
+					hr
+					- each bigAdv in siteAdvert.big.top
+						p Расположение: верх
+						ul.OneBigAdv(style='border-radius:0px;padding: 5px;')
+							li Убрать: #{bigAdv.dateDelete} 
+							li id: #{bigAdv.id}
+							li title: #{bigAdv.title}
+							li Картинка: 
+								a(href=bigAdv.imglink) Вот.
+							li Ссылка: 
+								a(href=bigAdv.url) Вот.
+							li Заказчик: #{bigAdv.author}
+							a(href='/admin/advert/del/big/id'+bigAdv.id +'/'+bigAdv.title) Удалить эту рекламу
+						hr(style='color:#3498db; background: #3498db;')
+				if(siteAdvert.big.bottom && siteAdvert.big.bottom.length > 0)
+					hr
+					- each bigAdvb in siteAdvert.big.bottom
+						p Расположение: низ
+						ul.OneBigAdv(style='border-radius:0px;padding: 5px;')
+							li Убрать: #{bigAdvb.dateDelete}
+							li id: #{bigAdvb.id}
+							li title: #{bigAdvb.title}
+							li Картинка:
+								a(href=bigAdvb.imglink) Вот.
+							li Ссылка:
+								a(href=bigAdvb.url) Вот.
+							li Заказчик: #{bigAdvb.author}
+							a(href='/admin/advert/del/big/id'+bigAdvb.id +'/'+bigAdvb.title) Удалить эту рекламу
+							hr(style='color:#3498db; background: #3498db;')
+				else
+					li Пусто тут
+		br
+		.well
+			h3.text-primary Реклама(маленькая)
+				if(siteAdvert.small.length > 0)
+					hr
+					- each smallAdv in siteAdvert.small
+						ul.OneBigAdv(style='border-radius:0px;padding: 5px;')
+							li Убрать: #{smallAdv.dateDelete} 
+							li id: #{smallAdv.id}
+							li title: #{smallAdv.title}
+							li Картинка: 
+								a(href=smallAdv.imglink) Вот.
+							li Ссылка: 
+								a(href=smallAdv.url) Вот.
+							li Заказчик: #{smallAdv.author}
+							a(href='/admin/advert/del/small/id'+smallAdv.id +'/'+smallAdv.title) Удалить эту рекламу
+						hr(style='color:#3498db; background: #3498db;')
+				else
+					li Пусто тут

@@ -1,0 +1,23 @@
+extends admin
+
+block content
+	h3 Сообщения
+	hr
+	if(user.admin.msgs.length > 0)
+		- each msg in user.admin.msgs.reverse()
+			li.article(style='border-bottom: 1px solid rgba(52, 152, 219,.2);padding:5px;border-radius:5px;margin-bottom:10px;')
+				p Тема: #{msg.theme}
+				h3 #{msg.text}
+				a(href='/admin/del/'+msg.num+'?mail='+msg.mail) Удалить
+				#postInfo
+					small(style='display:inline-block;') #{msg.num}
+					|&nbsp;
+					|&nbsp;
+					small(style='display:inline-block') Отправленно #{msg.addtime}
+					|&nbsp;
+					|&nbsp;
+					small(style='display:inline-block') Mail: #{msg.mail}
+					|&nbsp;
+				br
+	else
+		h3 Тут пока нет сообщений

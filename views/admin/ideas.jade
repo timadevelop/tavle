@@ -1,0 +1,44 @@
+extends admin
+
+block content
+	if(posts)
+		h3 Новые идеи
+		hr
+		br
+		if(user.admin.isAdmin && page=='Хорошие идеи')
+			a(href='/admin/good/remove/all').but Удалить все из архива
+		- each post in posts
+			li.article
+				#tags
+					a(href='/tags/' + post.tags[0]) ##{post.tags[0]}
+					|&nbsp;
+					small(style='display:inline-block;') + #{post.tags.length-1} Ещё
+				if(post.readed && post.readed == true)
+					a(href='/admin/goodideas/' + post.num)
+						h2 #{post.title}
+					a(href='/admin/good/show/post'+post.num).but На публикацию
+					|&nbsp;
+					if(user.admin.isAdmin)
+						a(href='/admin/good/remove/post'+post.num).but Удалить
+					p Idea is readed
+				else
+					a(href='/admin/ideas/' + post.num)
+						h2 #{post.title}
+					a(href='/admin/hide/post'+post.num).but В архив
+					|&nbsp;
+					a(href='/admin/show/post'+post.num).but На публикацию
+					|&nbsp;
+					if(user.admin.isAdmin)
+						a(href='/admin/remove/post'+post.num, style='float:right;line-height: 20px;').but Удалить
+				#postInfo
+					small(style='display:inline-block') Добавлена #{post.addtime}
+					|&nbsp;
+					|&nbsp;
+					small(style='display:inline-block') Просмотров: #{post.reviews}
+				br
+				hr
+				br
+		include ../_paginate
+		//_paginate находится на папку выше!
+	else
+		h3 #{page}

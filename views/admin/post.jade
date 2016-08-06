@@ -1,0 +1,56 @@
+extends admin
+
+block content
+	br
+	if(post)
+		.post
+			.authorPost
+				if(author)
+					- var avaAnotherUser;
+					- if(author.photoMax)
+						- avaAnotherUser = author.photoMax;
+						li
+							img(src=avaAnotherUser)
+					- else
+						li
+							h1#avatar #{author.name[0]}
+					li
+						h2
+							a(href='/users/id' + author.idNum)
+								b #{author.name}
+							if(author.about)
+								p(style='opacity: .7;margin-top: 5px;') #{author.about}
+							else
+								p(style='opacity: .7;margin-top: 5px;') Ничего о себе не рассказал
+				else
+					p Ooops
+					h3 Автор идеи не найден.				
+			hr
+			if(post.readed && post.readed == true)
+				p Idea is readed
+				a(href='/admin/good/show/post'+post.num).but На публикацию
+				|&nbsp;
+				a(href='/admin/good/remove/post'+post.num, style='float:right;line-height:20px;').but Удалить
+			else
+				a(href='/admin/hide/post'+post.num).but В архив
+				|&nbsp;
+				a(href='/admin/show/post'+post.num).but На публикацию
+				|&nbsp;
+				if(user.admin.isAdmin)
+					a(href='/admin/remove/post'+post.num, style='float:right;line-height: 20px;').but Удалить
+			br
+			br
+			hr
+			#tagsPost
+				- each tag in post.tags
+					a(href='/tags/' + tag) ##{tag}
+			h2 #{post.title}
+			br
+			#posttext !{post.text}
+			#postInfo
+					small(style='display:inline-block') Добавлена #{post.addtime}
+					|&nbsp;
+					|&nbsp;
+					small(style='display:inline-block') Просмотров: #{post.reviews}
+	else
+		p #{page}

@@ -1,0 +1,49 @@
+extends layout
+
+block content
+	if(users[0])
+		h3 Пользователи
+		hr
+		.allUsers
+			- each anotherUser in users
+				.anotheruserinf
+					ul
+						- var avaAnotherUser;
+						- if(anotherUser.photoMax)
+							- avaAnotherUser = anotherUser.photoMax;
+							li
+								img(src=avaAnotherUser)
+						- else
+							li
+								h1#avatar #{anotherUser.name[0]}
+						li
+							h2
+								a(href='/users/id' + anotherUser.idNum)
+									b #{anotherUser.name}
+						li#stats
+							|&nbsp;
+							if(anotherUser.stats.posts != 0)
+								a(href='/users/id#{anotherUser.idNum}').fa.fa-lightbulb-o &nbsp; #{anotherUser.stats.posts}
+							else
+								a.fa.fa-lightbulb-o &nbsp; 0
+							|&nbsp;
+							|&nbsp;
+							if(anotherUser.stats.answers != 0)
+								a(href='/users/id' + anotherUser.idNum).fa.fa-pencil-square-o &nbsp; #{anotherUser.stats.answers}
+							else
+								a.fa.fa-pencil-square-o &nbsp; 0
+						#anotherInfo
+							li
+								if(anotherUser.about)
+									if(anotherUser.about.length > 40)
+										p(style='opacity: .7;') #{anotherUser.about.slice(0,40)}...
+									else
+										p(style='opacity: .7;') #{anotherUser.about}
+								else
+									p(style='opacity: .7;') Ничего о себе не рассказал
+							hr
+							li Вклад: #{anotherUser.score}
+		br
+		include _paginate
+	else
+		h3 Пока-что никого.

@@ -1,0 +1,283 @@
+extends layout
+
+block content
+	br
+	if(post)
+		script(src='https://cdn.socket.io/socket.io-1.3.0.js')
+		.post
+			.authorPost
+				if(author)
+					- var avaAnotherUser;
+					- if(author.photoMax)
+						- avaAnotherUser = author.photoMax;
+						li
+							img(src=avaAnotherUser)
+					- else
+						li
+							h1#avatar #{author.name[0]}
+					li
+						h2
+							a(href='/users/id' + author.idNum)
+								b #{author.name}
+							if(author.about)
+								p(style='opacity: .7;margin-top: 5px;') #{author.about}
+							else
+								p(style='opacity: .7;margin-top: 5px;') Ничего о себе не рассказал
+				else
+					h3 Автор идеи не найден.				
+			hr
+			br
+			#tagsPost
+				- each tag in post.tags
+					a(href='/tags/' + tag) ##{tag}
+			h2.postTitle #{post.title}
+			br
+			#posttext !{post.text}
+			br
+			script(type='text/javascript').
+				(function(w,doc) {
+					if (!w.__utlWdgt ) {
+						w.__utlWdgt = true;
+						var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+						s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+						s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+						var h=d[g]('body')[0];
+						h.appendChild(s);
+					}})(window,document);
+			.uptolike-buttons(data-share-size="30" data-like-text-enable="false" data-background-alpha="0.0" data-pid="1361171" data-mode="share" data-background-color="#ffffff" data-share-shape="round" data-icon-color="#ffffff" data-text-color="#000000" data-buttons-color="#ffffff" data-counter-background-color="#ffffff" data-share-counter-type="disable" data-orientation="horizontal" data-following-enable="false" data-sn-ids="fb.vk.tw.ok.gp." data-selection-enable="false" data-exclude-show-more="true" data-share-style="11" data-counter-background-alpha="0.02" data-top-button="false")
+			#postInfo
+				small(style='display:inline-block') Добавлена #{post.addtime}
+				|&nbsp;
+				|&nbsp;
+				small(style='display:inline-block') Просмотров: #{post.reviews}
+			//script(type="text/javascript" src="//yastatic.net/share/share.js" charset="utf-8")
+			//.yashare-auto-init(data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="vkontakte,facebook,twitter,gplus")
+		br
+		h3 Комментарии
+		ul#comments
+			if(comments.length <= 3)
+				- each comment in comments
+					li(data-author=comment.authorName, id='comment'+comment.num)
+						if(user && user.idNum == comment.authorId || user && user.admin.isModer)
+							.deleteComment.fa.fa-times(data-comment-num=comment.num)
+								.comMsg Удалить
+						else if(user)
+							.apeal.fa.fa-times(data-comment-num=comment.num)
+								.comMsg Пожаловаться
+						- var avatar;
+						a(href='/users/id'+comment.authorId)
+							- if(comment.authorImg)
+								- avatar = comment.authorImg;
+								img(src=avatar)#comAva
+							- else
+								h1.comAvatar #{comment.authorName[0]}
+						a(href='/users/id'+comment.authorId) #{comment.authorName}
+						span.comText #{comment.text}
+						-var isLiked = false;
+						-if(user){
+						-	comment.rating.forEach(function(el, i, array){
+						-		if(el == user.idNum){
+						-			isLiked = true;
+						-		}
+						-	});
+						-}
+						.stats
+							if(isLiked)
+								small(data-num=comment.num).like Мне Нравится | #{comment.rating.length}
+							else
+								small(data-num=comment.num).like.noLiked Мне Нравится | #{comment.rating.length}
+							|&nbsp;
+							|&nbsp;
+							a.answer(data-a-for=comment.authorId) Ответить
+							|&nbsp;
+							|&nbsp;
+							small Добавлен #{comment.addtime} в #{comment.htime}
+
+			else
+				br
+				p#more='Показать еще ' + (comments.length-3)
+				ul#hidden
+					p#hideCom='Скрыть'
+					- each com in comments.splice(0,comments.length-3)
+						li(data-author=com.authorName, id='comment'+com.num)
+							if(user && user.idNum == com.authorId || user && user.admin.isModer)
+								.deleteComment.fa.fa-times(data-comment-num=com.num)
+									.comMsg Удалить
+							else if(user)
+								.apeal.fa.fa-times(data-comment-num=com.num)
+									.comMsg Пожаловаться
+							- var avatar;
+							a(href='/users/id'+com.authorId)
+								- if(com.authorImg)
+									- avatar = com.authorImg;
+									img(src=avatar)#comAva
+								- else
+									h1.comAvatar #{com.authorName[0]}
+							a(href='/users/id'+com.authorId) #{com.authorName}
+							span.comText #{com.text}
+							-var isLiked = false;
+							-if(user){
+							-	com.rating.forEach(function(el, i, array){
+							-		if(el == user.idNum){
+							-			isLiked = true;
+							-		}
+							-	});
+							-}
+							.stats
+								if(isLiked)
+									small(data-num=com.num).like Мне Нравится | #{com.rating.length}
+								else
+									small(data-num=com.num).like.noLiked Мне Нравится | #{com.rating.length}
+								|&nbsp;
+								|&nbsp;
+								a.answer(data-a-for=com.authorId) Ответить
+								|&nbsp;
+								|&nbsp;
+								small Добавлен #{com.addtime} в #{com.htime}
+				- each comment in comments.splice(comments.length-3, 3)
+					li(data-author=comment.authorName, id='comment'+comment.num)
+						- var avatar;
+						a(href='/users/id'+comment.authorId)
+							- if(comment.authorImg)
+								- avatar = comment.authorImg;
+								img(src=avatar)#comAva
+							- else
+								h1.comAvatar #{comment.authorName[0]}
+						a(href='/users/id'+comment.authorId) #{comment.authorName}
+						if(user && user.idNum == comment.authorId || user && user.admin.isModer)
+							.deleteComment.fa.fa-times(data-comment-num=comment.num)
+								.comMsg Удалить
+						else if(user)
+							.apeal.fa.fa-times(data-comment-num=comment.num)
+								.comMsg Пожаловаться
+						span.comText #{comment.text}
+						-var isLiked = false;
+						-if(user){
+						-	comment.rating.forEach(function(el, i, array){
+						-		if(el == user.idNum){
+						-			isLiked = true;
+						-		}
+						-	});
+						-}
+						
+						.stats
+							if(isLiked)
+								small(data-num=comment.num).like Мне Нравится | #{comment.rating.length}
+							else
+								small(data-num=comment.num).like.noLiked Мне Нравится | #{comment.rating.length}
+							|&nbsp;
+							|&nbsp;
+							a.answer(data-a-for=comment.authorId) Ответить
+							|&nbsp;
+							|&nbsp;
+							small Добавлен #{comment.addtime} в #{comment.htime}
+		if(user && user.access == true)
+			form(action='')#form
+				fieldset
+					.form-group
+						input.form-control#sendComment(autocomplete='off' placeholder='Добвить Комментарий')
+		if(!user)
+			p Что бы добавить комментарий Вам нужно войти.
+		if(user && user.access == false)
+			p Вы забанены в связи с нарушеем правил и не можете комментировать идеи.
+			p Для восстановления доступа к обсуждению идей обратитесь к 
+				a(href='/feedback' style='display:inline-block;') администрации
+		if(user)
+			script(src='/js/jquery.scrollTo.min.js')
+			script(type='text/javascript').
+				if(window.location.hash){
+					$(window.location.hash).css('background', 'rgba(52, 152, 219, 0.2)');
+					$('ul#hidden').toggle(100, function () {
+						$('p#more').toggle(0);
+						$.scrollTo(window.location.hash, 500);
+					});
+				}
+				var socket = io();
+				$( document ).ready(function(){
+					var postNum = #{post.num};
+					socket.emit('connectToRoom', postNum);
+				});
+				$(document).on('click','.noLiked', function(){
+					var comNum = $(this).attr('data-num');
+					var postNum = #{post.num};
+					var authorId = #{user.idNum};
+					socket.emit('like', postNum, comNum, authorId);
+				});
+				$(document).on('click','.answer', function(){
+					var answerToId = $(this).attr('data-a-for');
+					$('#sendComment').attr('data-a-for', answerToId);
+					$('#sendComment').val($(this).parent().parent().attr('data-author')+', ');
+					$('#sendComment').focus();
+				});
+				$(document).on('click','.deleteComment', function(){
+					var comNum = $(this).attr('data-comment-num');
+					var authorId = #{user.idNum};
+					var postNum = #{post.num};
+					if(authorId){
+						socket.emit('deleteComment', authorId, comNum, postNum);
+					}
+				});
+				$(document).on('click','.apeal', function(){
+					var text = prompt('В чем суть жалобы?');
+					if(text && text.length > 4){
+						var comNum = $(this).attr('data-comment-num');
+						var authorId = #{user.idNum};
+						var postNum = #{post.num};
+						socket.emit('apeal', authorId, comNum, postNum, text);
+					}
+				});
+				$('#sendComment').on('keydown', function(){
+					if($('#sendComment').val().length < 1){
+						$('#sendComment').addClass('has-error');
+					} else{
+						$('#sendComment').removeClass('has-error');
+					}
+				});
+				$('#form').submit(function(){
+					var postNum = #{post.num};
+					var authorId = #{user.idNum};
+					var answerToId = $('#sendComment').attr('data-a-for');
+					if($('#sendComment').val().length < 2){
+						$('#sendComment').addClass('has-error');
+						return false;
+					} else{
+						socket.emit('sendComment',$('#sendComment').val(), postNum, authorId, answerToId);
+						$('#sendComment').removeClass('has-error');
+						$('#sendComment').val('');
+						return false;
+					}
+				});
+				socket.on('msgDeleted', function(comNum){
+					$('#comment'+comNum).remove();
+				});
+				socket.on('msgAdded', function(newComment){
+					var avForMsgAdded = '';
+					if(newComment.authorImg){
+						avForMsgAdded= '<img src="'+newComment.authorImg+'", id="comAva">';
+					}else{
+						avForMsgAdded = '<h1 class="comAvatar">'+newComment.authorName[0]+'</h1>';
+					}
+					var userId = #{user.idNum};
+					var userIsModer = false;
+					var adm = #{user.admin};
+					if(adm.isModer){
+						userIsModer = true;
+					}
+					var deleteComment = '';
+					if(userIsModer || userId == newComment.authorId){
+						deleteComment = '<div class="deleteComment fa fa-times" data-comment-num="'+newComment.num+'"><div class="comMsg">Удалить</div></div>';
+					} else{
+						deleteComment = '<div class="apeal fa fa-times" data-comment-num="'+newComment.num+'"><div class="comMsg">Пожаловаться</div></div>';
+					}
+					var li = deleteComment+avForMsgAdded+'<a href=\'/users/id'+newComment.authorId+'\')>' + newComment.authorName + '</a><span>' + newComment.text + '</span><div class="stats"><small class=\'like noLiked\' data-num='+newComment.num+'>Мне Нравится  | '+newComment.rating.length+' </small>&nbsp;&nbsp;<a class="answer" data-a-for="'+newComment.authorId+'">Ответить</a><small>&nbsp;&nbsp;Добавлен ' + newComment.addtime + ' в ' + newComment.htime +'</small></div>';
+					$('#comments').append($('<li id="comment' + newComment.num + '" data-author="'+newComment.authorName+'">').html(li));
+					$('#sendComment').removeAttr('data-a-for');
+				});
+				socket.on('liked', function(comNum, rating, authorId){
+					$('small[data-num=\''+ (comNum) + '\']').text('Мне Нравится | '+rating);
+				});
+				socket.on('youLiked',function(comNum){
+					$('small[data-num=\''+ (comNum) + '\']').removeClass('noLiked');
+				});
+	else
+		p #{page}

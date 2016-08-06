@@ -1,0 +1,56 @@
+extends layout
+
+block content
+	br
+	if(tag)
+		.tagInfo
+			h2.tagName ##{tag.name} &nbsp;
+			br
+			.tagCounts
+				if(tag.ideas > 99999)
+					small.tagPostsNum Идей: 100k+
+				else
+					small.tagPostsNum Идей: #{tag.ideas}
+				if(tag.listeners < 1000)
+					small.listeners Подписчиков: #{tag.listeners}
+				else
+					small.listeners Подписчиков: 1к+
+				if(user)
+					- var signed = false;
+					- user.tags.forEach(function(el, i, array){
+					-		if(el == tag.name){
+					-			signed = true;
+					-		}
+					-	});
+					if(signed)
+						small
+							a(href='/delTag/'+tag.name).subs Отписаться
+					else
+						small
+							a(href='/addTag/'+tag.name).subs Подписаться
+			hr
+			br
+		if(results[0])
+			- each post in results
+				li.article
+					#tags
+						a(href='/tags/' + post._source.tags[0]) ##{post._source.tags[0]}
+						|&nbsp;
+						if(post._source.tags.length > 1)
+							small(style='display:inline-block;') + #{post._source.tags.length-1} Ещё
+					a(href='/ideas/' + post._source.num )
+						h2 #{post._source.title}
+					#postInfo
+						small(style='display:inline-block') Комментарии: #{post._source.comments.length}
+						|&nbsp;
+						|&nbsp;
+						small(style='display:inline-block') Добавлена #{post._source.addtime}
+						|&nbsp;
+						|&nbsp;
+						small(style='display:inline-block') Просмотров: #{post._source.reviews}
+					br
+					hr
+					br
+			.paginator !{paginator}
+	else
+		h3 #{page}

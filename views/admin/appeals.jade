@@ -1,0 +1,64 @@
+extends admin
+
+block content
+	h3 Жалобы
+	br
+	if(comments[0])
+		- each comment in comments
+			- var href = '/ideas/'+comment.postNum+'#comment'+comment.num;
+			.bigcomment(style='margin-bottom: 5px;padding:5px;border-left: 5px solid rgba(52, 152, 219,.8);background: rgba(52, 152, 219, 0.2);')
+				.commentText.appealText
+					a.deleteComment.fa.fa-times(href='/admin/deleteAppeals/'+comment.num,style='float: right;')
+						.comMsg Удалить
+					.appealBlock
+						a(href='/users/id'+comment.appeals[0].author.id) #{comment.appeals[0].author.name}
+						|&nbsp;
+						small  пожаловался на
+						|&nbsp;
+						a(href=href) комменарий 
+						|&nbsp;
+						small от #{comment.authorName}
+						|&nbsp;
+						small  в #{comment.appeals[0].addtime.time} |
+						|&nbsp;
+						small #{comment.appeals[0].addtime.date}
+					.appealBlock(style='padding-left: 5px;')
+						small #{comment.appeals[0].text}
+				if(comment.appeals.length > 1)
+					.hideShow
+						- var numap;
+						- var nums = comment.appeals.length-1;
+						- if(nums == 1){
+						-	numap = nums + ' жалобу'
+						-} else if(nums > 4){
+						-	numap = nums + ' жалоб'
+						-} else{
+						-	numap = nums + ' жалобы'
+						-}
+						p(style='cursor: pointer;color: #2A6496;')=' Показать / скрыть еще '+numap
+					.anotherAppeals(style='margin-left: 10px; background: rgba(52, 152, 219,.1);')
+						- each appeal in comment.appeals.splice(0,comment.appeals.length-1)
+							.bigcomment(style='max-width: 100%;overflow: hidden;margin-bottom: 1px;border-left: 2px solid white;border-bottom: 1px solid white')
+								.commentText.appealText
+									a.deleteComment.fa.fa-times(href='/admin/deleteAppeals/'+comment.num,style='float: right;opacity: .5;')
+										.comMsg Удалить
+									.appealBlock
+										a(href='/users/id'+appeal.author.id) #{appeal.author.name}
+										|&nbsp;
+										small  пожаловался на
+										|&nbsp;
+										a(href=href) комменарий 
+										|&nbsp;
+										small от #{comment.authorName}
+										|&nbsp;
+										small  в #{appeal.addtime.time} |
+										|&nbsp;
+										small #{appeal.addtime.date}
+									.appealBlock(style='padding-left: 5px;')
+										small #{appeal.text}
+		script(type='text/javascript').
+			$(document).on('click','.hideShow p', function(){
+				$('.anotherAppeals').toggle(300);
+			});
+	else
+		p Нет жалоб :)

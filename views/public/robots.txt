@@ -1,0 +1,26 @@
+
+User-agent: *
+Allow: /
+Allow: /search/*
+Allow: /tags
+Allow: /tags/*
+Allow: /about
+Allow: /ideas
+Allow: /users/*
+Allow: /users
+Allow: /ideas
+Allow: /startups
+Disallow: /tracker
+Disallow: /readNotice
+Disallow: /delTag
+Disallow: /addTag
+Disallow: /login
+Disallow: /profile
+Disallow: /feed
+Disallow: /auth/*
+Disallow: /feedback
+Disallow: /answer
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /delModer
+Disallow: /makeModer

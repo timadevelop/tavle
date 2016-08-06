@@ -1,0 +1,257 @@
+doctype
+head
+	title= page[0].toUpperCase() + page.substring(1) + ' | Tavle'
+	meta(charset='utf-8')
+	meta(name="viewport" content="width=device-width, initial-scale=1.0")
+	meta(name='robots' content='all')
+	meta(http-equiv="Content-Language" content="en,ru")
+	meta(name='title' content=page[0].toUpperCase() + page.substring(1) + ' | Tavle')
+	meta(property='og:site_name' content='Tavle - холивар идей')
+	meta(property='og:type' content='website')
+	meta(property='og:title' content=page[0].toUpperCase() + page.substring(1) + ' | Tavle')
+	meta(property='og:description' content='Tavle.ru - это сервис идей и советов для гиков. На  публикуются и обсуждаются идеи по IT-тематике')
+	meta(name='description' content='Tavle.ru - это сервис идей и советов для гиков. На  публикуются и обсуждаются идеи по IT-тематике.')
+	if(post)
+		-var mtags = post.tags.join(', ');
+		meta(name='keywords' content='Tavle, идеи, ИТ, информационные технологии, стартапы, sturtups, tavle, tavle.ru, IT,'+mtags)
+		meta(property='og:keywords' content='Tavle, идеи, ИТ, информационные технологии, стартапы, sturtups, tavle, tavle.ru, IT,'+mtags)
+	else
+		meta(name='keywords' content='Tavle, идеи, ИТ, информационные технологии, стартапы, sturtups, tavle, tavle.ru, IT')
+		meta(property='og:keywords' content='Tavle, идеи, ИТ, информационные технологии, стартапы, sturtups, tavle, tavle.ru, IT')
+	script(src='/js/jquery-1.11.2.min.js')
+	link(rel='stylesheet' href='/css/font-awesome.min.css')
+	link(rel='stylesheet' href='/css/bootstrap.min.css')
+	link(rel='stylesheet' href='/css/main.min.css')
+	link(href='/ico/fav.ico' rel="shortcut icon" type="image/x-icon")
+body
+	#top
+	style.
+		.smallAdvert{display:none;}
+		@media only screen and (max-width:1000px){.smallAdvert{display:block;}}
+	header
+		#slideMenu.fa.fa-bars
+		#findForm
+			form(method='post' action='/search')
+				fieldset
+					label(for='call')
+					if(call)
+						input(name='call' type='search' placeholder=call, autocomplete = 'off')
+					else
+						input(name='call' type='search' autocomplete = 'off')
+					button(type='submit').fa.fa-search
+		a(href='/addIdea').fa.fa-pl +
+	.Mainnav
+		.logo
+			a(href='/')
+				h1 Tavle
+				//img(src='/images/logo.png')
+		if(user)
+			.user
+				- var avatar;
+				- if(user.photoMax)
+					- avatar = user.photoMax;
+					img(src=avatar)
+				- else
+					h1#avatar #{user.name[0]}
+				a(href='/users/id#{user.idNum}')#name
+					h2 #{user.name}
+				.settings
+					a(href='/profile')
+						li Настройки 
+					a(href='/logout')
+						li Выйти
+		else
+			br
+			p.text-center(style='color:#DDD;') Войдите с помощью
+			#soclog
+				a.fa.fa-facebook-square(href='/auth/facebook')
+				a.fa.fa-github-square(href='/auth/github')
+				a.fa.fa-vk(href='/auth/vkontakte')
+			br
+			style.
+				.Mainnav{
+					 background-color:rgba(52, 73, 94, 0.9);
+				}
+		.menu
+			ul
+				if(user)
+					a(href='/addIdea')
+						if(page == 'Добавить идею')
+							li#matched Добавить
+						else
+							li#unMatched Добавить
+					a(href='/feed')
+						if(page=='Моя лента')
+							li#matched Моя лента
+						else
+							li#unMatched Моя лента
+				a(href='/ideas')
+					if(page=='Все Идеи')
+						li#matched Все идеи
+					else
+						li#unMatched Все идеи
+				a(href='/users')
+					if(page=='Пользователи')
+						li#matched Пользователи
+					else
+						li#unMatched Пользователи
+				if(user)
+					a(href='/tracker')
+						if(page=='Уведомления')
+							li#matched Уведомления
+						else
+							li#unMatched Уведомления
+				if(user && user.admin.isAdmin || user && user.admin.isModer)
+					a(href='/admin')
+						li#unMatched Админка
+
+				if(!user)
+					br
+					small#notAuthentInfo Для использования всех функций сайта Вам необходимо войти либо зарегистрироваться.
+		if(user)
+			if(user && user.messages.length > 3)
+				- each notice in user.messages.splice(user.messages.length-3, 3)
+					a(href='/tracker')
+						.notice
+							if(notice.type == 'answer')
+								.fa.fa-comment
+								.noticeText
+									small.author #{notice.author.name}
+									small  ответил(а) на Ваш комментарий
+							else if(notice.type == 'like')
+								.fa.fa-heart
+								.noticeText
+									small.author #{notice.author.name}
+									small  лайкнул(а) Ваш комментарий
+									// не забыть про пробел нужный
+							else if(notice.type == 'comment')
+								.fa.fa-comments-o
+								.noticeText
+									small.author #{notice.author.name}
+									small  прокомментировал(а) Вашу идею
+									// не забыть про пробел нужный
+				br
+				a.unreaded(href='/tracker') Прочитать все
+			else
+				- each notice in user.messages
+					//a(href=notice.href)
+					a(href='/tracker')
+						.notice
+							if(notice.type == 'answer')
+								.fa.fa-comment
+								.noticeText
+									small.author #{notice.author.name}
+									small  ответил на Ваш комментарий
+							else if(notice.type == 'like')
+								.fa.fa-heart
+								.noticeText
+									small.author #{notice.author.name}
+									small  лайкнул Ваш комментарий
+							else if(notice.type == 'comment')
+								.fa.fa-comments-o
+								.noticeText
+									small.author #{notice.author.name}
+									small  прокомментировал(а) Вашу идею
+	.flexbox
+		.content
+			if(query && query.msg == 'isAnotherUser')
+				p.bg-danger Данный аккаунт уже был привязан к другому профилю.
+			if(query.warnmsg)
+				p.bg-danger #{query.warnmsg}
+			if(query.sucmsg)
+				p.bg-success #{query.sucmsg}
+			if(siteAdvert.small && siteAdvert.small.length > 0)
+				- var randomNum = Math.floor(Math.random() * ((siteAdvert.small.length-1) + 1))
+				a(href=siteAdvert.small[randomNum].url)
+					.smallAdvert(style='background:url('+siteAdvert.small[randomNum].imglink+');background-position:center;')
+			.inner
+				block content
+			block foot
+				if(siteAdvert.small && siteAdvert.small.length > 0)
+					- var randomNum = Math.floor(Math.random() * ((siteAdvert.small.length-1) + 1))
+					a(href=siteAdvert.small[randomNum].url)
+						.smallAdvert(style='background:url('+siteAdvert.small[randomNum].imglink+');background-position:center;')
+					br
+				script(src='/js/jquery.scrollTo.min.js')
+				footer
+					ul#menuServices
+						a
+							li &copy;Tavle 2015
+						a(href='/about')
+							li О сайте
+						a(href='/feedback')
+							li Обратная связь
+						a(href='/rules')
+							li Правила
+						//a(href='/special')
+							li Спецпроекты
+						a(href='#top').scrollTo
+							li(style='color:#2D72D9') Вверх
+					ul#menuSocial
+						a(href='https://vk.com/public88353681', target='_blank')
+							li.fa.fa-vk
+						a(href='mailto:support@tavle.ru', target='_blank')
+							li.fa.fa-envelope
+						a(href='https://twitter.com/tavleRu', target='_blank')
+							li.fa.fa-twitter
+		.rcol
+			#add
+				a(href='/addIdea')#addButton Добавить
+			if(page == 'Добавить идею')
+				.rules
+					br
+					h2 Памятка автору идеи
+					br
+					hr
+					p Идея, а также ее содержание не должны нарушать 
+						a(href='/rules') правила сайта.
+					hr
+					p Старайтесь оформлять текст так, чтобы его было удобно читать.
+					hr
+					p Не стоит писать сюда сообщения для администрации. Связаться с нами вы всегда можете &nbsp;
+						a(href='/feedback') тут
+					hr
+					p Если вы еще не прочитали правила, знайте: флуд и другие не адекватные действия игнорируются
+			if(siteAdvert.big.top && siteAdvert.big.top.length > 0)
+				- var randomNumOne = Math.floor(Math.random() * ((siteAdvert.big.top.length-1) + 1))
+				.bigAdvert
+					a(href=siteAdvert.big.top[randomNumOne].url)
+						img(src=siteAdvert.big.top[randomNumOne].imglink)
+					small * Just testing advert.
+			.rcolinf
+				h2 Куда я попал?
+				br
+				p Tavle - это сервис идей и советов для гиков. На  публикуются и обсуждаются идеи по IT-тематике
+				a.yelButton(href='/about') Почитать подробнее
+				br
+				br
+				small Нашли баг?
+				small Напишите пожалуйста в 
+					a(href='/feedback' style='display:inline-block;') Feedback
+			if(page != 'Профиль' && page != 'Добавить идею')
+				script(type="text/javascript" src="//vk.com/js/api/openapi.js?116")
+				<!-- VK Widget -->
+				#vk_groups
+				br
+				hr
+				script(type="text/javascript").
+					VK.Widgets.Group("vk_groups", {mode: 2, width: "300", height: "400"}, 88353681);
+			if(siteAdvert.big.bottom && siteAdvert.big.bottom.length > 0 && page != 'Профиль' && page != 'Добавить идею')
+				- var randomNum = Math.floor(Math.random() * ((siteAdvert.big.bottom.length-1) + 1));
+				.bigAdvert
+					a(href=siteAdvert.big.bottom[randomNum].url)
+						img(src=siteAdvert.big.bottom[randomNum].imglink)
+	script(src='/js/layout.min.js')
+	script(type='text/javascript').
+		$(document).on('click','.scrollTo', function(){
+			var el = $(this).attr('href');
+			$.scrollTo(el, 500);
+		});
+	// Gooogle Analystics
+	script(type='text/javascript').
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-61044541-2', 'auto');
+		ga('send', 'pageview');

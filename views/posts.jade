@@ -1,0 +1,82 @@
+extends layout
+
+block content
+	if(!author && results[0])
+	if(page=='Моя лента')
+		h3 Мои идеи
+		br
+	if(page=='Все Идеи')
+		h3 Все идеи
+		br
+	if(page=='Стартапы')
+		h3 Стартапы
+		br
+	if(!author)
+		.nav-horizontal.ideas-nav
+			if(page=='Все Идеи')
+				li.checked Все идеи
+			else
+				a(href='/ideas')
+					li Все идеи
+			if(page=='Стартапы')
+				li.checked Стартапы
+			else
+				a(href='/startups')
+					li Стартапы
+			if(page=='Моя лента')
+				li.checked Моя лента
+			else
+				a(href='/feed')
+					li Моя лента
+	if(author && author.name)
+		.userinf
+			- var avatar;
+			- if(author.photoMax)
+				- avatar = author.photoMax;
+				img(src=avatar)
+			- else
+				h3#avatarBig(style='color:#000;') #{author.name[0]}
+			h3 #{author.name}
+			br
+			p Вклад: #{author.score}
+			li#stats
+				|&nbsp;
+				if(author.stats.posts != 0)
+					a(href='/users/id#{author.idNum}') Идеи: #{author.stats.posts}
+				else
+					a Идеи: 0
+				|&nbsp;
+				|&nbsp;
+				if(author.stats.answers != 0)
+					a(href='/users/id#{author.idNum}') Комментарии: #{author.stats.answers}
+				else
+					a Комментарии: 0
+			br
+			hr
+			h3(style='text-align:left;') Последние идеи пользователя
+			br
+	br
+	if(results[0])
+		- each post in results
+			li.article
+				#tags
+					a(href='/tags/' + post._source.tags[0]) ##{post._source.tags[0]}
+					|&nbsp;
+					if(post._source.tags.length > 1)
+						small + #{post._source.tags.length-1} ещё
+				a(href='/ideas/' + post._source.num )
+
+					h2 #{post._source.title}
+				#postInfo
+					small Комментарии: #{post._source.comments.length}
+					|&nbsp;
+					|&nbsp;
+					small Добавлена #{post._source.addtime}
+					|&nbsp;
+					|&nbsp;
+					small Просмотров: #{post._source.reviews}
+				br
+				hr
+		.paginator !{paginator}
+	else
+		h3 Тут нет идей.

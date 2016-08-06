@@ -1,0 +1,52 @@
+extends layout
+
+block content
+	link(rel='stylesheet' href='/js/tagsinput/bootstrap-tagsinput.min.css')
+	link(rel='stylesheet' href='/css/stylewysihtml5.min.css')
+	script(src='/js/tagsinput/bootstrap-tagsinput.min.js')
+	h3 Новая идея
+	hr
+	br
+	form(method='post' action='/addPost')
+		.form-group
+			Label(for='title') Суть идеи
+			small Сформулируйте вопрос так, чтобы сразу было понятно, о чём речь.
+			input.form-control( name='title' type='text' placeholder='Введите от 11 до 100 символов.'  autocomplete = 'off')
+		.form-group
+			Label(for='tags') Теги
+			small *если вы публикуете описание разработанного стартапа - укажите тег "стартап"
+			input(name='tags' type='text' value='Awesome Tag' data-role='tagsinput' autocomplete = 'off' placeholder = 'Введите до 10 тегов')
+		.form-group
+			Label(for='text') Описание идеи
+		#toolbar(style='display:none;')
+			a(data-wysihtml5-command='bold', title='CTRL+B').fa.fa-bold
+			a(data-wysihtml5-command='italic', title='CTRL+I').fa.fa-italic 
+			a(data-wysihtml5-command='createLink').fa.fa-link
+			a(data-wysihtml5-command='insertImage').fa.fa-image
+			a(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h2').fa.fa-header
+			a(data-wysihtml5-command='insertUnorderedList').fa.fa-list-ul
+			a(data-wysihtml5-command='insertOrderedList').fa.fa-list-ol
+			a(data-wysihtml5-command='undo').fa.fa-undo
+			a(data-wysihtml5-command='redo').fa.fa-repeat
+			div(data-wysihtml5-dialog='createLink', style='display: none;')
+				label Ссылка: 
+					input(data-wysihtml5-dialog-field='href', value='http://' autocomplete = 'off')
+				a(data-wysihtml5-dialog-action='save') OK
+				a(data-wysihtml5-dialog-action='cancel') Cancel
+			div(data-wysihtml5-dialog='insertImage', style='display: none;' )
+				label Картинка: 
+					input(data-wysihtml5-dialog-field='src', value='http://' autocomplete = 'off')
+				a(data-wysihtml5-dialog-action='save') OK
+				a(data-wysihtml5-dialog-action='cancel') Cancel
+		textarea#textarea.form-control( name='text' rows='3', placeholder='Введите от 11 до 8000 символов.' style='color: #333 !important; height: 400px;')
+		br
+		.form-group
+			button.btn.btn-primary(type='submit') Опубликовать
+	script(src='/js/wysihtml5/parser_rules/advanced.min.js')
+	script(src='/js/wysihtml5/wysihtml5-0.4.0pre.min.js')
+	script(type='text/javascript').
+		var editor = new wysihtml5.Editor('textarea', {
+			toolbar:'toolbar',
+			parserRules: wysihtml5ParserRules
+		});
+		/*$("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();*/

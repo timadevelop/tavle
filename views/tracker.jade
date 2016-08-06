@@ -1,0 +1,60 @@
+extends layout
+
+block content
+	h3 Уведомления
+	br
+	if(notices[0])
+		a(href='/tracker/clean' style='float: right;') Очистить
+		br
+		hr
+		- each notice in notices
+			a(href=notice.href)
+				if(notice.type == 'answer')
+					if(notice.readed === false)
+						.bigNotice(style='border-left: 5px solid rgba(52, 152, 219,.8);background: rgba(52, 152, 219, 0.2);')
+							.noticeText
+								small.author #{notice.author.name}
+								small  ответил(а) на Ваш комментарий
+								small  в #{notice.addtime.time} 
+								p #{notice.addtime.date}
+					if(notice.readed === true)
+						.bigNotice(style='border-left: 5px solid rgba(52, 152, 219,.8);')
+							.noticeText
+								small.author #{notice.author.name}
+								small  ответил(а) на Ваш комментарий
+								small  в #{notice.addtime.time} 
+								p #{notice.addtime.date}
+				else if(notice.type == 'like')
+					if(notice.readed === false)
+						.bigNotice(style='border-left: 5px solid rgba(231, 76, 60,.8);background: rgba(52, 152, 219, 0.2);')
+							.noticeText
+								small.author #{notice.author.name}
+								small  лайкнул(а) Ваш комментарий
+								small  в #{notice.addtime.time} 
+								p #{notice.addtime.date}
+					if(notice.readed === true)
+						.bigNotice(style='border-left: 5px solid rgba(231, 76, 60,.8);')
+							.noticeText
+								small.author #{notice.author.name}
+								small  лайкнул(а) Ваш комментарий
+								small  в #{notice.addtime.time} 
+								p #{notice.addtime.date}
+				else if(notice.type == 'comment')
+					if(notice.readed === false)
+						.bigNotice(style='border-left: 5px solid rgba(46, 204, 113,.8);background: rgba(52, 152, 219, 0.2);')
+							.noticeText
+								small.author #{notice.author.name}
+								small  прокомментировал(а) Вашу идею
+								small  в #{notice.addtime.time} 
+								p #{notice.addtime.date}
+					if(notice.readed === true)
+						.bigNotice(style='border-left: 5px solid rgba(46, 204, 113,.8);')
+							.noticeText
+								small.author #{notice.author.name}
+								small  прокомментировал(а) Вашу идею
+								small  в #{notice.addtime.time} 
+								p #{notice.addtime.date}
+		br
+		include _paginate
+	else
+		p У Вас нет уведомлений

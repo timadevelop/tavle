@@ -1,0 +1,59 @@
+extends layout
+
+block content
+	h3 Обратная связь
+	hr
+	form(method='post' action='/feedback')
+		fieldset
+			.form-group
+				Label(for='theme') Выберите тему
+				select.form-control#theme(name = 'theme' autocomplete='off')
+					option Гениальная Идея
+					option Реклама
+					option Сотруднечество
+					option Проблема
+					option Жалоба
+			.form-group
+				Label(for='mail') Email
+				input.form-control#mail( name='mail' type='email' autocomplete = 'off')
+			.form-group
+				Label(for='mtext') Текст сообщения
+				textarea.form-control#mtext(rows='5' name='mtext' autocomplete = 'off')
+			.form-group
+				button.btn.btn-primary(type='submit' disable) Отправить
+	p Или отправте письмо на 
+		a(href='mailto:support@tavle.ru' target='_blank') support@tavle.ru
+		style.
+			select {
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				outline: none;
+				-webkit-padding-end: 20px;	
+				-moz-padding-end: 20px;
+				-webkit-padding-start: 2px;
+				-moz-padding-start: 2px;
+				background-color: #00C3FF;
+				color: white;
+				border: 0;
+				font-size: inherit;
+				margin: 0;
+				overflow: hidden;
+				padding-top: 2px;
+				padding-bottom: 2px;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			option{
+				display: block;
+				width: 100%;
+				height: 34px;
+				padding: 6px 12px;
+				font-size: 14px;
+				opacity: .7;
+				line-height: 1.42857;
+				color: #555;
+				vertical-align: middle;
+				border: none;
+			}

@@ -1,0 +1,184 @@
+doctype
+head
+	if(user.admin.isAdmin)
+		title= 'Админка'
+	if(user.admin.isModer)
+		title= 'Модераторка'
+	meta(charset='utf-8')
+	link(href='/ico/fav.ico' rel="shortcut icon" type="image/x-icon")
+	link(rel='stylesheet' href='/css/font-awesome.min.css')
+	link(rel='stylesheet' href='/css/bootstrap.min.css')
+	link(rel='stylesheet' href='/css/main.min.css')
+	script(src='/js/jquery-1.11.2.min.js')
+	script(src='/js/layout.min.js')
+body
+	header
+		#slideMenu.fa.fa-bars
+		#findForm
+			form(method='post' action='/find')
+				input(type='search')
+				button(type='submit').fa.fa-search
+	.Mainnav
+		.logo
+			a(href='/admin')
+				if(user.admin.isAdmin)
+					h1 Admin
+				if(user.admin.isModer)
+					h1 Moder
+		if(user)
+			.user
+				- var avatar;
+				- if(user.photoMax)
+					- avatar = user.photoMax;
+					img(src=avatar)
+				- else
+					h1#avatar #{user.name[0]}
+				a(href='/users/id#{user.idNum}')#name
+					h2 #{user.name}
+				.settings
+					a(href='/')
+						li Выйти из Админки
+		.menu
+			ul
+				li
+				a(href='/admin/ideas')
+					if(page=='Новые идеи')
+						li#matched(style='display:inline-block;') Новые идеи
+							if(NotReadedPostsCount != 0)
+								small.numof #{NotReadedPostsCount}
+					else
+						li#unMatched(style='display:inline-block;') Новые идеи
+							if(NotReadedPostsCount != 0)
+								small.numof #{NotReadedPostsCount}
+					a(href='/admin/appeals')
+						if(page=='Жалобы')
+							li#matched(style='display:inline-block;') Жалобы
+						else
+							li#unMatched(style='display:inline-block;') Жалобы
+				if(user.admin.isAdmin)
+					a(href='/admin/msgs')
+						if(page=='Сообщения')
+							li#matched(style='display:inline-block;') Сообщения
+								if(notReadedMsgs > 0)
+									small.numof #{notReadedMsgs}
+						else
+							li#unMatched(style='display:inline-block;') Сообщения
+								if(notReadedMsgs > 0)
+									small.numof #{notReadedMsgs}
+				if(user.admin.isAdmin)
+					a(href='/admin/advert')
+						if(page=='Реклама')
+							li#matched Реклама
+						else
+							li#unMatched Реклама
+					a(href='/admin/goodIdeas')
+						if(page == 'Хорошие идеи')
+							li#matched Архив
+						else
+							li#unMatched Архив
+				if(!user.admin.isAdmin)
+					a(href='/feedback')
+						li#unMatched(style='display:inline-block;') Написать админу
+	.flexbox
+		.content
+			if(query.warnmsg)
+				p.bg-danger #{query.warnmsg}
+			if(query.sucmsg)
+				p.bg-success #{query.sucmsg}
+			.inner
+				if(user.admin.isModer && page =='MainAdminPage')
+					form(method='post' action='/ban')
+						fieldset
+							.form-group
+								Label Забанить : ID
+								input.form-control#mail( name='id' type='number' autocomplete = 'off' placeholder='id')
+					form(method='post' action='unban')
+						fieldset
+							.form-group
+								Label Разбанить: ID
+								input.form-control#mail( name='id' type='number' autocomplete = 'off' placeholder='id')
+					hr
+				if(user.admin.isAdmin && page =='MainAdminPage')
+					form(method='post' action='/makeModer')
+						fieldset
+							.form-group
+								Label Сделать модератором: ID
+								input.form-control#mail( name='id' type='number' autocomplete = 'off' placeholder='id')
+					form(method='post' action='/delModer')
+						fieldset
+							.form-group
+								Label Убрать из модераторов: ID
+								input.form-control#mail( name='id' type='number' autocomplete = 'off' placeholder='id')
+					br
+					hr
+					br
+					if(moders[0])
+						h3 Модераторы
+						hr
+						.allUsers
+							- each moder in moders
+								.anotheruserinf
+									ul
+										- var avamoder;
+										- if(moder.photoMax)
+											- avamoder = moder.photoMax;
+											li
+												img(src=avamoder)
+										- else
+											li
+												h1#avatar #{moder.name[0]}
+										li
+											h2
+												a(href='/users/id' + moder.idNum)
+													b #{moder.name}
+										li#stats
+											|&nbsp;
+											if(moder.stats.posts != 0)
+												a(href='/users/id#{moder.idNum}').fa.fa-lightbulb-o &nbsp; #{moder.stats.posts}
+											else
+												a.fa.fa-lightbulb-o &nbsp; 0
+											|&nbsp;
+											|&nbsp;
+											if(moder.stats.answers != 0)
+												a(href='#').fa.fa-pencil-square-o &nbsp; #{moder.stats.answers}
+											else
+												a.fa.fa-pencil-square-o &nbsp; 0
+										#anotherInfo
+											li
+												if(moder.about)
+													if(moder.about.length > 40)
+														p(style='opacity: .7;') #{moder.about.slice(0,40)}...
+													else
+														p(style='opacity: .7;') #{moder.about}
+												else
+													p(style='opacity: .7;') Ничего о себе не рассказал
+											hr
+											li Вклад: #{moder.score}
+						br
+						include ../_paginate
+					else
+						h3 Пока-что никого.
+				block content
+			block foot
+				br
+				footer
+					ul#menuServices
+						a(href='/about')
+							li О сайте
+						a(href='/feedback')
+							li Обратная связь
+						//a(href='/feedback')
+							li Реклама
+					ul#menuSocial
+						a(href='https://vk.com/public88353681', target='_blank')
+							li.fa.fa-vk
+						a(href='mailto:maintavle@gmail.com', target='_blank')
+							li.fa.fa-envelope
+						a(href='https://twitter.com/tavleRu', target='_blank')
+							li.fa.fa-twitter
+		.rcol
+			#add
+				a(href='/addIdea')#addButton Добавить
+			.rcolinf
+				h2(style='text-align: center;font-weight:600;') Tavle 
+				p Do something new.

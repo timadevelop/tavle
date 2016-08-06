@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	h3 Вход
+	hr
+	p Для использования данных функий войдите или зарегистрируйтесь с помощью одного из способов.
+	a.btn.btn-primary(href='/auth/facebook')
+		span Facebook
+	a.btn.btn-primary(href='/auth/github')
+		span Github
+	a.btn.btn-primary(href='/auth/vkontakte')
+		span Vkontakte

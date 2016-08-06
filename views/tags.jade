@@ -1,0 +1,39 @@
+extends layout
+
+block content
+	h3 Популярные теги
+	hr
+	br
+	if(tags[0])
+		.allUsers
+			- each tag in tags
+				.anotheruserinf(style='min-height:50px;height:80px;')
+					ul
+						li 
+							a(href='/tags/' + tag.name )
+								if(tag.name.length > 20)
+									h2(style='font-size: 24px;') ##{tag.name.slice(0,20)}...
+								else
+									h2(style='font-size: 24px;') ##{tag.name}
+							li#stats
+								a(href='/tags/' + tag.name )
+									small(style='display:inline-block') Идей: #{tag.ideas}
+								|&nbsp;
+								|&nbsp;
+								small(style='display:inline-block') Подписчиков: #{tag.listeners}
+							if(user)
+								- var signed = false;
+								- user.tags.forEach(function(el, i, array){
+								-		if(el == tag.name){
+								-			signed = true;
+								-		}
+								-	});
+								if(signed)
+									a(href='/delTag/'+tag.name) Отписаться
+								else
+									a(href='/addTag/'+tag.name) Подписаться
+			br
+			hr
+			br
+			br
+			include _paginate

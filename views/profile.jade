@@ -1,0 +1,126 @@
+extends layout
+
+block content
+	- var connects = 0;
+	if(user.facebook.token)
+		- connects++
+	if(user.github.token)
+		- connects++
+	if(user.vkontakte.token)
+		- connects++
+	br
+	h3 Настройки профиля
+	hr
+	.userinf
+		- var avatar;
+		- if(user.photoMax)
+			- avatar = user.photoMax;
+			img(src=avatar)
+		- else
+			h3#avatarBig #{user.name[0]}
+		h3(style='font-size: 16px;font-weight: bold;margin-top: 20px;margin-bottom: 5px;') #{user.name}
+		br
+
+		p(style='font-weight: 600;') Ваш ID: #{user.idNum}
+		p(style='font-weight: 600;') Вклад: #{user.score}
+		li#stats
+			|&nbsp;
+			if(user.stats.posts != 0)
+				a(href='/users/id#{user.idNum}' style='font-size: 15px;') Идеи: #{user.stats.posts}
+			else
+				a(style='font-size: 15px;') Идеи: 0
+			|&nbsp;
+			|&nbsp;
+			if(user.stats.answers != 0)
+				a(href='/users/id#{user.idNum}' style='font-size: 15px;') Комментарии: #{user.stats.answers}
+			else
+				a(style='font-size: 15px;') Комментарии: 0
+		br
+	.nav-horizontal
+		li.mainSettingsB.cheked Основное
+		li.authSettingsB Авторизаця	
+	#mainSettings(style='padding:10px')
+		link(rel='stylesheet' href='/css/stylewysihtml5.min.css')
+		form(method='post' action='/addInf')
+			fieldset
+				.form-group
+					Label(for='name') Имя:
+					input.form-control( name='name' type='text' placeholder=user.name)
+				.form-group
+					Label(for='about') Коротко о себе:
+					textarea.form-control(rows='3' name='about') #{user.about}
+				.form-group
+					Label(for='contacts') Как с вами связатся?
+					#toolbar(style='display:none;')
+						a(data-wysihtml5-command='bold', title='CTRL+B').fa.fa-bold
+						a(data-wysihtml5-command='createLink').fa.fa-link
+						div(data-wysihtml5-dialog='createLink', style='display: none;')
+							label Ссылка:
+								input(data-wysihtml5-dialog-field='href', autocomplete = 'off')
+							a(data-wysihtml5-dialog-action='save') OK
+							a(data-wysihtml5-dialog-action='cancel') Cancel
+					textarea#textarea.form-control(style='height: 100px' rows='3' name='contacts') #{user.contacts}
+				.form-group
+					button.btn.btn-primary(type='submit') Сохранить измененя
+				hr
+				script(src='/js/wysihtml5/parser_rules/advanced.min.js')
+				script(src='/js/wysihtml5/wysihtml5-0.4.0pre.min.js')
+				script(type='text/javascript').
+					var editor = new wysihtml5.Editor('textarea', {
+						toolbar: 'toolbar',
+						parserRules: wysihtml5ParserRules
+					});
+				if(user.tags.length>0)
+					#tags
+						h3 Вы подписаны на:
+						- each tag in user.tags
+							a(href='/tags/' + tag) ##{tag}
+							|&nbsp;
+							|&nbsp;
+				else
+					h3 Вы не подписаны ни на один тег
+	#authSettings(style='padding:10px')
+		style.
+			.well{
+				background-color: transparent;
+				border: 1px solid #F5F5F5;
+				border-radius: 0;
+			}
+		p Эти данные видны только вам
+		.fb
+			.col
+				.well
+					h3.text-primary Facebook
+					if(user.facebook.token)
+						p Привязан под именем #{user.facebook.name}
+						if(connects > 1)
+							a(href='/unlink/facebook') Отвязать Facebook
+					else
+						a(href='/connect/facebook') Привязать Facebook
+		.git
+			.col
+				.well
+					h3.text-primary Github
+					if(user.github.token)
+						p Привязан под именем #{user.github.name}
+						if(connects > 1)
+							a(href='/unlink/github') Отвязать Github
+							small Привязать обратно аккаунт будет невозможно.
+							small Вы сможете только создать аккаунт (зарегистрироватся) с помощью Github.
+							small Как только Github исправит данную проблему мы добавим возможность его привязки.
+					else
+						p На данный момент привязать аккаунт Github не возможно. 
+						small Вы можете только создать аккаунт (зарегистрироватся) с помощью Github.
+						small Как только Github исправит данную проблему мы добавим возможность его привязки.
+
+		.vk
+			.col
+				.well
+					h3.text-primary Vkontakte
+					if(user.vkontakte.token)
+						p Привязан под именем #{user.vkontakte.name}
+						p Ваш id: #{user.vkontakte.id}
+						if(connects > 1)
+							a(href='/unlink/vkontakte') Отвязать аккаунт Vk.com
+					else
+						a(href='/connect/vkontakte') Привязать аккаунт Vkontakte

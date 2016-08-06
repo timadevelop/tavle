@@ -1,0 +1,22 @@
+//- This examples makes use of Bootstrap 3.x pagination classes
+if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+  style.
+    .btn-primary{min-width:80px;max-width:80px;}
+  .navigation.well-sm#pagination
+    ul.pager
+      if paginate.hasPreviousPages
+        li.previous
+          a(href=paginate.href(true)).btn.btn-primary
+            |  Сюда
+      else
+        li.previous
+          a().btn.btn-primary.disabled
+            |  Некуда
+      if paginate.hasNextPages(pageCount)
+        li.next
+          a(href=paginate.href()).btn.btn-primary
+            | Туда&nbsp;
+      else
+        li.next
+          a().btn.btn-primary.disabled
+            | Некуда&nbsp;
